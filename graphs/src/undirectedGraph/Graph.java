@@ -2,23 +2,29 @@ package undirectedGraph;
 
 
 public class Graph {
-	private int V;
-	private int E;
+	private final int V;
+	private Bag<Integer>[] adj;
 	
-	public Graph(int v)
+	public Graph(int V)
 	{
-		V = v;
-		E = 0;
+		this.V = V;
+		adj = (Bag<Integer>[]) new Bag[V];
+		for (int v = 0; v < V; v++)
+		{
+			adj[v] = new Bag<Integer>();
+		}
 	}
 
 	public void addEdge(int v, int w)
 	{
-		//TODO
+		adj[v].add(w);
+		adj[w].add(v);
 	}
 	
 	public Iterable<Integer> adj(int v)
 	{
-		//TODO
+		return adj[v];
+		
 	}
 	
 	public int V()
