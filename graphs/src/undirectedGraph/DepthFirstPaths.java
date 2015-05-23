@@ -21,7 +21,7 @@ public class DepthFirstPaths {
 			if (!marked[w])
 			{
 				dfs(G, w);
-				edgeTo[w] = v;
+				edgeTo[w] = v; // v is the parent
 			}
 	}
 	
@@ -34,7 +34,7 @@ public class DepthFirstPaths {
 	{
 		if(!hasPathTo(v)) return null;
 		Stack<Integer> path = new Stack<Integer>();
-		for (int x = v; x != s; x = edgeTo[x])
+		for (int x = v; x != s; x = edgeTo[x]) // move up to the source by following the parents
 			path.push(x);
 		path.push(s);
 		return path;
