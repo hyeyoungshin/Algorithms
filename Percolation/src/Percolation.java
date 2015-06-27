@@ -41,24 +41,27 @@ public class Percolation {
 	{
 		if(!valid(i, j)) throw new IndexOutOfBoundsException();
 
-//		int p = id[(i-1) * n + (j-1)]; // <== what is p??
-//		
-//		if(!isOpen(i, j))
-//		{
-//			grid[i][j] = OPEN;
-//			numOpen = numOpen + 1;
-//
-//			int[] neighbors = getNeighbors(i, j);
-//			
-//			int count = 0;
-//			while(!connected(p, neighbors[count]))
-//			{
-//				union(p, neighbors[count]);
-//				count++;
-//			}
-//		}
+		if(!isOpen(i, j))
+		{
+			grid[i][j] = OPEN;
+			numOpen = numOpen + 1; // <-- may not need
+
+			if(valid(i-1,j-1) && valid(i+1,j+1)) {
+				int id = getId(i,j);
+				if(isOpen(i-1,j)) union(id, getId(i-1,j));
+				if(isOpen(i,j-1)) union(id, getId(i,j-1));
+				if(isOpen(i+1,j)) union(id, getId(i+1,j));
+				if(isOpen(i,j+1)) union(id, getId(i,j+1));
+			}
+		}
 	}
 
+	/** Check if inputs are valid 
+	 * @param i 
+	 * @param j
+	 * @return true if inputs are valid 
+	 * 		   false otherwise
+	 */
 	private boolean valid(int i, int j)
 	{
 		// id range is from 0 to n-1
@@ -67,6 +70,32 @@ public class Percolation {
 			return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Get id of a site
+	 * @param i row of grid
+	 * @param j column of grid
+	 * @return id of grid[i][j]
+	 */
+	private int getId(int i, int j) 
+	{
+		return j + 3*i;
+	}
+	
+	/**
+	 * Get row and column of an id
+	 * @param p id
+	 * @return row and column
+	 */
+	private int[][] getGrid(int p)
+	{
+		int i = p / n;
+		int j = p % n;
+		
+		int[][] ans = new int[i][j];
+		
+		return ans;
 	}
 
 //	private int[] getNeighbors(int i, int j)
