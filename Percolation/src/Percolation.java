@@ -83,44 +83,19 @@ public class Percolation {
 		return j + 3*i;
 	}
 	
-	/**
-	 * Get row and column of an id
-	 * @param p id
-	 * @return row and column
-	 */
-	private int[][] getGrid(int p)
-	{
-		int i = p / n;
-		int j = p % n;
-		
-		int[][] ans = new int[i][j];
-		
-		return ans;
-	}
-
-//	private int[] getNeighbors(int i, int j)
+//	/**
+//	 * Get row and column of an id
+//	 * @param p id
+//	 * @return row and column
+//	 */
+//	private int[][] getGrid(int p)
 //	{
-//		int p = id[(i-1)*n + (j-1)];
-//		int[] neighbors = new int[4];
-//
-//		if(valid(i-1, j)) //top
-//		{
-//			neighbors[0] = p - n;
-//		}
-//		if(valid(i+1, j)) //bottom
-//		{
-//			neighbors[1] = p + n;
-//		}
-//		if(valid(i, j-1)) //left
-//		{
-//			neighbors[2] = p - 1;
-//		}
-//		if(valid(i, j+1)) //right
-//		{
-//			neighbors[3] = p + 1;
-//		}
-//
-//		return neighbors;
+//		int i = p / n;
+//		int j = p % n;
+//		
+//		int[][] ans = new int[i][j];
+//		
+//		return ans;
 //	}
 
 	private boolean connected(int p, int q)
@@ -171,34 +146,32 @@ public class Percolation {
 
 	/**
 	 * Is site (row i, column j) full?
-	 * @param i
-	 * @param j
-	 * @return
+	 * @param i row
+	 * @param j column
+	 * @return true if site is connected to an open site in the top row
+	 *         false otherwise
 	 */
 	public boolean isFull(int i, int j) 
 	{
-		for(int k = 0; k < id.length; k++)
+		for(int k = 0; k < n; k++)
 		{
-			if(connected(grid[0][k], grid[i][j]))
-			{
-				return true;
-			}
+			if(isOpen(0,k)) 
+				if(connected(getId(0,k), getId(i,j))) return true;
 		}
 		return false;
 	}
 
 	/**
 	 *  does the system percolate?
-	 * @return
+	 * @return true if percolates
+	 *         false otherwise 
 	 */
 	public boolean percolates()
 	{
 		for(int k = 0; k < n; k++)
 		{
-			if(isFull(n-1, k))
-			{
-				return true;
-			}
+			if(isOpen(n-1, k))
+				if(isFull(n-1, k)) return true;
 		}
 		return false;
 }

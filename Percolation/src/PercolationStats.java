@@ -1,25 +1,26 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 
 public class PercolationStats {
 	
-	private int N; // N in N-by-N grid
+	private int n; // N in N-by-N grid
 	private int exp;
-	private int[] openSites; // number of open sites for each experiment
+	private ArrayList<Integer> openSites; // number of open sites for each experiment
 
 	public PercolationStats(int N, int T) // perform T independent experiments on an N-by-N grid  
 	{
 		if(N <= 0 || T <= 0)
 			throw new IllegalArgumentException();
 		
-		this.N = N;
+		this.n = N;
 		exp = T;
 		
 		Random rand = new Random();
-		int row = rand.nextInt(N) + 1;
-		int col = rand.nextInt(N) + 1;
+		int row = rand.nextInt(n) + 1;
+		int col = rand.nextInt(n) + 1;
 		
-		Percolation perc = new Percolation(N);
+		Percolation perc = new Percolation(n);
 		while(exp != 0) {
 			perc.open(row, col);
 			exp--;
