@@ -7,11 +7,13 @@
  */
 
 public class Percolation {
-	private int n;
+	private int n; // n in 'n-by-n grid'
 	private int[] id;
+	private int[] size;
 	private int[][] grid;
-	private int numOpen;
-	private final int OPEN = 1;
+	private int comp;
+	private int numOpen; // <== Do I need this?
+	private final int OPEN = 1; // 1 when open, 0 when blocked
 
 	public Percolation(int N)
 	{
@@ -19,12 +21,14 @@ public class Percolation {
 
 		// create N-by-N grid, with all sites blocked
 		n = N;
-		id = new int[n];
-		for(int i = 0; i < n; i++)
+		id = new int[n*n-1];
+		for(int i = 0; i < n*n-1; i++)
 		{
 			id[i] = i;
 		}
 		grid = new int[n][n];
+		size = new int[n];
+		comp = n;
 		numOpen = 0;
 	}
 
@@ -37,59 +41,58 @@ public class Percolation {
 	{
 		if(!valid(i, j)) throw new IndexOutOfBoundsException();
 
-		int p = id[(i-1) * n + (j-1)];
-
-		if(!isOpen(i, j))
-		{
-			grid[i][j] = OPEN;
-			numOpen = numOpen + 1;
-
-			int[] neighbors = getNeighbors(i, j);
-			
-			int count = 0;
-			while(!connected(p, neighbors[count]))
-			{
-				union(p, neighbors[count]);
-				count++;
-			}
-		}
+//		int p = id[(i-1) * n + (j-1)]; // <== what is p??
+//		
+//		if(!isOpen(i, j))
+//		{
+//			grid[i][j] = OPEN;
+//			numOpen = numOpen + 1;
+//
+//			int[] neighbors = getNeighbors(i, j);
+//			
+//			int count = 0;
+//			while(!connected(p, neighbors[count]))
+//			{
+//				union(p, neighbors[count]);
+//				count++;
+//			}
+//		}
 	}
 
 	private boolean valid(int i, int j)
 	{
-		if(i < 1 || i > n || j < 1 || j > n)
+		// id range is from 0 to n-1
+		if(i < 0 || i >= n || j < 0 || j >= n)
 		{
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
-	private int[] getNeighbors(int i, int j)
-	{
-		if(!valid(i, j)) throw new IndexOutOfBoundsException();
-
-		int p = id[(i-1)*n + (j-1)];
-		int[] neighbors = new int[4];
-
-		if(valid(i-1, j)) //top
-		{
-			neighbors[0] = p - n;
-		}
-		if(valid(i+1, j)) //bottom
-		{
-			neighbors[1] = p + n;
-		}
-		if(valid(i, j-1)) //left
-		{
-			neighbors[2] = p - 1;
-		}
-		if(valid(i, j+1)) //right
-		{
-			neighbors[3] = p + 1;
-		}
-
-		return neighbors;
-	}
+//	private int[] getNeighbors(int i, int j)
+//	{
+//		int p = id[(i-1)*n + (j-1)];
+//		int[] neighbors = new int[4];
+//
+//		if(valid(i-1, j)) //top
+//		{
+//			neighbors[0] = p - n;
+//		}
+//		if(valid(i+1, j)) //bottom
+//		{
+//			neighbors[1] = p + n;
+//		}
+//		if(valid(i, j-1)) //left
+//		{
+//			neighbors[2] = p - 1;
+//		}
+//		if(valid(i, j+1)) //right
+//		{
+//			neighbors[3] = p + 1;
+//		}
+//
+//		return neighbors;
+//	}
 
 	private boolean connected(int p, int q)
 	{
@@ -98,24 +101,32 @@ public class Percolation {
 
 	private int root(int i)
 	{
+		if(i < 1) throw new IllegalArgumentException();
+		
 		while(i != id[i]) 
 		{
-			id[i] = id[id[i]]; //make every other node in path point to its grandparent --> halving path length
 			i = id[i];
 		}
-
 		return i;
 	}
 
 	private void union(int p, int q)
 	{
-		int pRoot = root(p);
-		int qRoot = root(q);
-		if(pRoot == qRoot) return;
+		int rootP = root(p);
+		int rootQ = root(q);
+		if(rootP == rootQ) return;
+		
+		// make smaller root point to larger one
+		if(size[rootP] < size[rootQ]) {
+			id[rootP] = rootQ;
+			size[rootQ] += size[rootP];
+		}
 		else
 		{
-			id[p] = qRoot;
+			id[rootQ] = rootP;
+			size[rootP] += rootQ;
 		}
+		comp--; // number of components reduces by 1 per union
 	}
 
 	/**
@@ -166,6 +177,9 @@ public class Percolation {
 	// Test client(optional)
 	public static void main(String[]args) 
 	{
+		Percolation p = new Percolation(3);
+		p.open(0,0);
+		System.out.println(p.isOpen(0, 0) == true);
 		
 	}
 }
