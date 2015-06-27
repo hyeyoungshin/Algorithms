@@ -1,9 +1,13 @@
 /**
+ * Programming Assignment 1: Percolation
+ * Algorithms, Part 1 by Robert Sedgewick and Kevin Wayne
  * 
  * @author Hyeyoung Shin
  *
  */
+
 public class Percolation {
+	private int n;
 	private int[] id;
 	private int[][] grid;
 	private int numOpen;
@@ -14,12 +18,13 @@ public class Percolation {
 		if(N < 1) throw new IllegalArgumentException();
 
 		// create N-by-N grid, with all sites blocked
-		id = new int[N];
-		for(int i=0; i<N; i++)
+		n = N;
+		id = new int[n];
+		for(int i = 0; i < n; i++)
 		{
 			id[i] = i;
 		}
-		grid = new int[N][N];
+		grid = new int[n][n];
 		numOpen = 0;
 	}
 
@@ -30,10 +35,9 @@ public class Percolation {
 	 */
 	public void open(int i, int j)
 	{
-		if(!isValidIndex(i, j)) throw new IndexOutOfBoundsException();
+		if(!valid(i, j)) throw new IndexOutOfBoundsException();
 
-		int N = id.length;
-		int p = id[(i-1)*N + (j-1)];
+		int p = id[(i-1) * n + (j-1)];
 
 		if(!isOpen(i, j))
 		{
@@ -51,11 +55,9 @@ public class Percolation {
 		}
 	}
 
-	private boolean isValidIndex(int i, int j)
+	private boolean valid(int i, int j)
 	{
-		int N = id.length;
-
-		if(i < 1 || i > N || j < 1 || j > N)
+		if(i < 1 || i > n || j < 1 || j > n)
 		{
 			return true;
 		}
@@ -64,26 +66,24 @@ public class Percolation {
 
 	private int[] getNeighbors(int i, int j)
 	{
-		if(!isValidIndex(i, j)) throw new IndexOutOfBoundsException();
+		if(!valid(i, j)) throw new IndexOutOfBoundsException();
 
-		int N = id.length;
-
-		int p = id[(i-1)*N + (j-1)];
+		int p = id[(i-1)*n + (j-1)];
 		int[] neighbors = new int[4];
 
-		if(isValidIndex(i-1, j)) //top
+		if(valid(i-1, j)) //top
 		{
-			neighbors[0] = p - N;
+			neighbors[0] = p - n;
 		}
-		if(isValidIndex(i+1, j)) //bottom
+		if(valid(i+1, j)) //bottom
 		{
-			neighbors[1] = p + N;
+			neighbors[1] = p + n;
 		}
-		if(isValidIndex(i, j-1)) //left
+		if(valid(i, j-1)) //left
 		{
 			neighbors[2] = p - 1;
 		}
-		if(isValidIndex(i, j+1)) //right
+		if(valid(i, j+1)) //right
 		{
 			neighbors[3] = p + 1;
 		}
@@ -153,10 +153,9 @@ public class Percolation {
 	 */
 	public boolean percolates()
 	{
-		int N = id.length;
-		for(int k=0; k<N; k++)
+		for(int k = 0; k < n; k++)
 		{
-			if(isFull(N-1, k))
+			if(isFull(n-1, k))
 			{
 				return true;
 			}
@@ -164,7 +163,7 @@ public class Percolation {
 		return false;
 }
 	  
-	//testclient(optional)
+	// Test client(optional)
 	public static void main(String[]args) 
 	{
 		
