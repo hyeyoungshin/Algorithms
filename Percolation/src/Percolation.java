@@ -17,12 +17,12 @@ public class Percolation {
 
 	public Percolation(int N)
 	{
-		if(N < 1) throw new IllegalArgumentException();
+		if (N < 1) throw new IllegalArgumentException();
 
 		// create N-by-N grid, with all sites blocked
 		n = N;
-		id = new int[n*n-1];
-		for(int i = 0; i < n*n-1; i++)
+		id = new int[n * n - 1];
+		for (int i = 0; i < n * n - 1; i++)
 		{
 			id[i] = i;
 		}
@@ -39,19 +39,19 @@ public class Percolation {
 	 */
 	public void open(int i, int j)
 	{
-		if(!valid(i, j)) throw new IndexOutOfBoundsException();
+		if (!valid(i, j)) throw new IndexOutOfBoundsException();
 
-		if(!isOpen(i, j))
+		if (!isOpen(i, j))
 		{
 			grid[i][j] = OPEN;
 			numOpen = numOpen + 1; // <-- may not need
 
-			if(valid(i-1,j-1) && valid(i+1,j+1)) {
+			if (valid(i-1, j-1) && valid(i+1, j+1)) {
 				int id = getId(i,j);
-				if(isOpen(i-1,j)) union(id, getId(i-1,j));
-				if(isOpen(i,j-1)) union(id, getId(i,j-1));
-				if(isOpen(i+1,j)) union(id, getId(i+1,j));
-				if(isOpen(i,j+1)) union(id, getId(i,j+1));
+				if (isOpen(i-1, j)) union(id, getId(i-1, j));
+				if (isOpen(i, j-1)) union(id, getId(i, j-1));
+				if (isOpen(i+1, j)) union(id, getId(i+1, j));
+				if (isOpen(i, j+1)) union(id, getId(i, j+1));
 			}
 		}
 	}
@@ -65,13 +65,13 @@ public class Percolation {
 	private boolean valid(int i, int j)
 	{
 		// id range is from 0 to n-1
-		if(i < 0 || i >= n || j < 0 || j >= n)
+		if (i < 0 || i >= n || j < 0 || j >= n)
 		{
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Get id of a site
 	 * @param i row of grid
@@ -80,23 +80,13 @@ public class Percolation {
 	 */
 	private int getId(int i, int j) 
 	{
-		return j + 3*i;
+		return j + 3 * i;
 	}
-	
-//	/**
-//	 * Get row and column of an id
-//	 * @param p id
-//	 * @return row and column
-//	 */
-//	private int[][] getGrid(int p)
-//	{
-//		int i = p / n;
-//		int j = p % n;
-//		
-//		int[][] ans = new int[i][j];
-//		
-//		return ans;
-//	}
+
+	public int getOpen()
+	{
+		return numOpen;
+	}
 
 	private boolean connected(int p, int q)
 	{
@@ -105,9 +95,9 @@ public class Percolation {
 
 	private int root(int i)
 	{
-		if(i < 1) throw new IllegalArgumentException();
-		
-		while(i != id[i]) 
+		if (i < 1) throw new IllegalArgumentException();
+
+		while (i != id[i]) 
 		{
 			i = id[i];
 		}
@@ -118,10 +108,10 @@ public class Percolation {
 	{
 		int rootP = root(p);
 		int rootQ = root(q);
-		if(rootP == rootQ) return;
-		
+		if (rootP == rootQ) return;
+
 		// make smaller root point to larger one
-		if(size[rootP] < size[rootQ]) {
+		if (size[rootP] < size[rootQ]) {
 			id[rootP] = rootQ;
 			size[rootQ] += size[rootP];
 		}
@@ -153,10 +143,10 @@ public class Percolation {
 	 */
 	public boolean isFull(int i, int j) 
 	{
-		for(int k = 0; k < n; k++)
+		for (int k = 0; k < n; k++)
 		{
-			if(isOpen(0,k)) 
-				if(connected(getId(0,k), getId(i,j))) return true;
+			if (isOpen(0, k)) 
+				if (connected(getId(0, k), getId(i, j))) return true;
 		}
 		return false;
 	}
@@ -168,20 +158,20 @@ public class Percolation {
 	 */
 	public boolean percolates()
 	{
-		for(int k = 0; k < n; k++)
+		for (int k = 0; k < n; k++)
 		{
-			if(isOpen(n-1, k))
-				if(isFull(n-1, k)) return true;
+			if (isOpen(n-1, k))
+				if (isFull(n-1, k)) return true;
 		}
 		return false;
-}
-	  
+	}
+
 	// Test client(optional)
 	public static void main(String[]args) 
 	{
 		Percolation p = new Percolation(3);
-		p.open(0,0);
+		p.open(0, 0);
 		System.out.println(p.isOpen(0, 0) == true);
-		
+
 	}
 }
